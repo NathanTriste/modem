@@ -2,7 +2,10 @@
 // NAVE ESCAPE
 // v1.0.0.1
 // ============================================
+const musica = new Audio("music/NoSuprises.mp3");
 
+musica.loop = true;
+musica.volume = 0.4;
 
 // ============================================
 // CANVAS
@@ -1308,6 +1311,8 @@ function endGame() {
     gameOver.classList.remove(
         "hidden"
     );
+    musica.pause();
+musica.currentTime = 0;
 }
 
 
@@ -1318,6 +1323,8 @@ function endGame() {
 startButton.addEventListener(
     "click",
     startGame
+    musica.currentTime = 0;
+    musica.play();
 );
 
 
@@ -1401,3 +1408,4 @@ window.addEventListener(
         keys[event.key] = false;
     }
 );
+
