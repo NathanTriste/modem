@@ -37,7 +37,7 @@ const finalScoreText = document.getElementById("finalScore");
 // Coloque sua música em:
 // music/musica.mp3
 
-const musica = new Audio("music/musica.mp3");
+const musica = new Audio("music/NoSurprises.mp3");
 
 musica.loop = true;
 musica.volume = 0.4;
