@@ -1,265 +1,173 @@
-// ============================================
-// NAVE ESCAPE
-// v1.0.0.1
-// ============================================
-const musica = new Audio("music/NoSuprises.mp3");
+// ==========================================
+// 🚀 NAVE ESCAPE - v1.0.0.2
+// ==========================================
+
+// ==========================
+// CANVAS
+// ==========================
+
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+// ==========================
+// TELAS
+// ==========================
+
+const menu = document.getElementById("menu");
+const game = document.getElementById("game");
+const gameOver = document.getElementById("gameOver");
+
+const playBtn = document.getElementById("playBtn");
+const restartBtn = document.getElementById("restartBtn");
+const menuBtn = document.getElementById("menuBtn");
+
+// ==========================
+// HUD
+// ==========================
+
+const scoreText = document.getElementById("score");
+const livesText = document.getElementById("lives");
+const highScoreText = document.getElementById("highScore");
+const finalScoreText = document.getElementById("finalScore");
+
+// ==========================
+// 🎵 MÚSICA
+// ==========================
+
+// Coloque sua música em:
+// music/musica.mp3
+
+const musica = new Audio("music/musica.mp3");
 
 musica.loop = true;
 musica.volume = 0.4;
 
-// ============================================
-// CANVAS
-// ============================================
-
-const canvas =
-    document.getElementById("gameCanvas");
-
-const ctx =
-    canvas.getContext("2d");
-
-
-// ============================================
-// ELEMENTOS HTML
-// ============================================
-
-const menu =
-    document.getElementById("menu");
-
-const game =
-    document.getElementById("game");
-
-const gameOver =
-    document.getElementById("gameOver");
-
-const startButton =
-    document.getElementById("startButton");
-
-const restartButton =
-    document.getElementById("restartButton");
-
-const menuButton =
-    document.getElementById("menuButton");
-
-const scoreText =
-    document.getElementById("score");
-
-const livesText =
-    document.getElementById("lives");
-
-const highScoreText =
-    document.getElementById("highScore");
-
-const finalScoreText =
-    document.getElementById("finalScore");
-
-
-// ============================================
-// VARIÁVEIS DO JOGO
-// ============================================
-
-let player;
-
-let meteors = [];
-
-let bullets = [];
-
-let particles = [];
-
-let stars = [];
-
-let keys = {};
-
-let score = 0;
-
-let lives = 3;
-
-let difficulty = 1;
-
-let gameTime = 0;
-
-let meteorTimer = 0;
-
-let shootCooldown = 0;
-
-let gameRunning = false;
-
-let animationId;
-
-
-// ============================================
-// RECORDE
-// ============================================
-
-let highScore =
-    Number(
-        localStorage.getItem(
-            "naveEscapeHighScore"
-        )
-    ) || 0;
-
-highScoreText.textContent =
-    highScore;
-
-
-// ============================================
-// TAMANHO DO CANVAS
-// ============================================
+// ==========================
+// TAMANHO DA TELA
+// ==========================
 
 function resizeCanvas() {
-
-    canvas.width =
-        window.innerWidth;
-
-    canvas.height =
-        window.innerHeight;
-
-
-    if (player) {
-
-        player.y =
-            canvas.height - 120;
-
-        if (
-            player.x +
-            player.width >
-            canvas.width
-        ) {
-
-            player.x =
-                canvas.width -
-                player.width;
-        }
-    }
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 }
-
-
-window.addEventListener(
-    "resize",
-    resizeCanvas
-);
 
 resizeCanvas();
 
+window.addEventListener("resize", resizeCanvas);
 
-// ============================================
-// CRIAR JOGADOR
-// ============================================
+// ==========================
+// 🚀 JOGADOR
+// ==========================
 
-function createPlayer() {
+const player = {
+    x: 0,
+    y: 0,
+    width: 45,
+    height: 55,
 
-    return {
+    speed: 7,
+    maxSpeed: 16
+};
 
-        x:
-            canvas.width / 2 - 25,
+// ==========================
+// ARRAYS
+// ==========================
 
-        y:
-            canvas.height - 120,
+let meteors = [];
+let bullets = [];
+let particles = [];
+let stars = [];
 
-        width: 50,
+// ==========================
+// VARIÁVEIS DO JOGO
+// ==========================
 
-        height: 60,
+let score = 0;
+let lives = 3;
 
-        speed: 7,
+let highScore = Number(localStorage.getItem("naveEscapeHighScore")) || 0;
 
-        maxSpeed: 16
-    };
+let difficulty = 1;
+let gameTime = 0;
+
+let meteorTimer = 0;
+let shootCooldown = 0;
+
+let gameRunning = false;
+let animationId;
+
+// ==========================
+// ⭐ ESTRELAS
+// ==========================
+
+function createStars() {
+
+    stars = [];
+
+    for (let i = 0; i < 150; i++) {
+
+        stars.push({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 2 + 0.5,
+            speed: Math.random() * 2 + 0.5
+        });
+    }
 }
 
+// ==========================
+// POSIÇÃO INICIAL DO PLAYER
+// ==========================
 
-// ============================================
+function resetPlayer() {
+
+    player.x = canvas.width / 2 - player.width / 2;
+
+    player.y = canvas.height - 100;
+
+    player.speed = 7;
+}
+
+// ==========================
 // CRIAR METEORO
-// ============================================
+// ==========================
 
 function createMeteor() {
 
-    const size =
-        Math.random() * 35 + 25;
+    const size = Math.random() * 35 + 25;
 
+    const meteor = {
 
-    meteors.push({
+        x: Math.random() * (canvas.width - size),
 
-        x:
-            Math.random() *
-            (canvas.width - size),
+        y: -size,
 
-        y:
-            -size,
-
-        size:
-            size,
+        width: size,
+        height: size,
 
         speed:
-            Math.random() * 3 +
-            3 +
-            difficulty * 0.8,
+            Math.random() * 2 +
+            2 +
+            difficulty * 0.45,
 
-        rotation:
-            Math.random() *
-            Math.PI * 2,
+        rotation: Math.random() * Math.PI * 2,
 
         rotationSpeed:
-            (Math.random() - 0.5) *
-            0.08,
+            (Math.random() - 0.5) * 0.05,
 
-        health:
-            size > 48 ? 2 : 1
-    });
+        health: size > 50 ? 2 : 1
+    };
+
+    meteors.push(meteor);
 }
 
+// ==========================
+// 💥 EXPLOSÃO
+// ==========================
 
-// ============================================
-// ATIRAR
-// ============================================
+function createExplosion(x, y) {
 
-function shoot() {
-
-    if (!gameRunning)
-        return;
-
-
-    if (shootCooldown > 0)
-        return;
-
-
-    bullets.push({
-
-        x:
-            player.x +
-            player.width / 2 -
-            3,
-
-        y:
-            player.y - 20,
-
-        width: 6,
-
-        height: 24,
-
-        speed: 16
-    });
-
-
-    // Pequeno intervalo
-    // entre os tiros
-
-    shootCooldown = 7;
-}
-
-
-// ============================================
-// CRIAR EXPLOSÃO
-// ============================================
-
-function createExplosion(
-    x,
-    y
-) {
-
-    for (
-        let i = 0;
-        i < 25;
-        i++
-    ) {
+    for (let i = 0; i < 15; i++) {
 
         particles.push({
 
@@ -267,68 +175,51 @@ function createExplosion(
 
             y: y,
 
-            vx:
-                (Math.random() - 0.5) *
-                9,
+            speedX: (Math.random() - 0.5) * 8,
 
-            vy:
-                (Math.random() - 0.5) *
-                9,
+            speedY: (Math.random() - 0.5) * 8,
 
-            size:
-                Math.random() * 5 + 2,
+            size: Math.random() * 4 + 2,
 
-            life: 1
+            life: 30
         });
     }
 }
 
+// ==========================
+// 🔫 ATIRAR
+// ==========================
 
-// ============================================
-// CRIAR ESTRELAS
-// ============================================
+function shoot() {
 
-function createStars() {
+    if (!gameRunning) return;
 
-    stars = [];
+    if (shootCooldown > 0) return;
 
-    for (
-        let i = 0;
-        i < 180;
-        i++
-    ) {
+    bullets.push({
 
-        stars.push({
+        x: player.x + player.width / 2 - 3,
 
-            x:
-                Math.random() *
-                canvas.width,
+        y: player.y,
 
-            y:
-                Math.random() *
-                canvas.height,
+        width: 6,
 
-            size:
-                Math.random() * 2,
+        height: 18,
 
-            speed:
-                Math.random() * 2 + 0.5
-        });
-    }
+        speed: 12
+    });
+
+    // Tempo entre tiros
+    shootCooldown = 10;
 }
 
-
-createStars();
-
-
-// ============================================
-// FUNDO
-// ============================================
+// ==========================
+// 🎨 FUNDO
+// ==========================
 
 function drawBackground() {
 
-    ctx.fillStyle =
-        "#02040a";
+    ctx.fillStyle = "#02040a";
 
     ctx.fillRect(
         0,
@@ -337,326 +228,196 @@ function drawBackground() {
         canvas.height
     );
 
+    // Estrelas
 
-    for (
-        const star of stars
-    ) {
+    ctx.fillStyle = "#ffffff";
 
-        star.y +=
-            star.speed +
-            difficulty * 0.15;
+    for (const star of stars) {
 
+        ctx.globalAlpha = Math.random() * 0.7 + 0.3;
 
-        if (
-            star.y >
-            canvas.height
-        ) {
+        ctx.fillRect(
+            star.x,
+            star.y,
+            star.size,
+            star.size
+        );
 
-            star.y = 0;
+        star.y += star.speed;
+
+        if (star.y > canvas.height) {
+
+            star.y = -5;
 
             star.x =
                 Math.random() *
                 canvas.width;
         }
-
-
-        ctx.globalAlpha =
-            Math.random() *
-            0.6 +
-            0.4;
-
-
-        ctx.fillStyle =
-            "white";
-
-
-        ctx.fillRect(
-
-            star.x,
-
-            star.y,
-
-            star.size,
-
-            star.size
-        );
     }
-
 
     ctx.globalAlpha = 1;
 }
 
-
-// ============================================
-// DESENHAR NAVE
-// ============================================
+// ==========================
+// 🚀 DESENHAR PLAYER
+// ==========================
 
 function drawPlayer() {
 
     ctx.save();
 
-
     ctx.translate(
-
-        player.x +
-        player.width / 2,
-
-        player.y +
-        player.height / 2
+        player.x + player.width / 2,
+        player.y + player.height / 2
     );
 
+    // Chama da nave
 
-    // FOGO
+    ctx.fillStyle = "#ff8c00";
 
     ctx.beginPath();
 
     ctx.moveTo(-10, 20);
-
-    ctx.lineTo(
-        0,
-        42 +
-        Math.random() * 12
-    );
-
+    ctx.lineTo(0, 35);
     ctx.lineTo(10, 20);
-
-    ctx.closePath();
-
-    ctx.fillStyle =
-        "#ff7b00";
-
-    ctx.shadowBlur = 15;
-
-    ctx.shadowColor =
-        "#ff5500";
 
     ctx.fill();
 
+    // Corpo
 
-    // NAVE
+    ctx.fillStyle = "#00eaff";
 
     ctx.beginPath();
 
-    ctx.moveTo(
-        0,
-        -30
-    );
+    ctx.moveTo(0, -28);
 
-    ctx.lineTo(
-        25,
-        25
-    );
+    ctx.lineTo(-22, 25);
 
-    ctx.lineTo(
-        0,
-        15
-    );
+    ctx.lineTo(0, 17);
 
-    ctx.lineTo(
-        -25,
-        25
-    );
+    ctx.lineTo(22, 25);
 
     ctx.closePath();
 
-    ctx.fillStyle =
-        "#00d9ff";
-
-    ctx.shadowBlur = 15;
-
-    ctx.shadowColor =
-        "#00d9ff";
-
     ctx.fill();
 
+    // Cabine
 
-    // JANELA
+    ctx.fillStyle = "#ffffff";
 
     ctx.beginPath();
 
     ctx.arc(
         0,
         -8,
-        8,
+        7,
         0,
         Math.PI * 2
     );
 
-    ctx.fillStyle =
-        "white";
-
-    ctx.shadowBlur = 10;
-
-    ctx.shadowColor =
-        "white";
-
     ctx.fill();
-
 
     ctx.restore();
 }
 
-
-// ============================================
-// DESENHAR METEORO
-// ============================================
+// ==========================
+// ☄️ DESENHAR METEORO
+// ==========================
 
 function drawMeteor(meteor) {
 
     ctx.save();
 
-
     ctx.translate(
-
-        meteor.x +
-        meteor.size / 2,
-
-        meteor.y +
-        meteor.size / 2
+        meteor.x + meteor.width / 2,
+        meteor.y + meteor.height / 2
     );
 
+    ctx.rotate(meteor.rotation);
 
-    ctx.rotate(
-        meteor.rotation
-    );
-
+    ctx.fillStyle = "#777";
 
     ctx.beginPath();
 
+    const radius = meteor.width / 2;
 
-    const points = 9;
-
-
-    for (
-        let i = 0;
-        i < points;
-        i++
-    ) {
+    for (let i = 0; i < 8; i++) {
 
         const angle =
-            (Math.PI * 2 / points) *
-            i;
+            (Math.PI * 2 / 8) * i;
 
-
-        const radius =
-            meteor.size / 2 *
-            (
-                0.75 +
-                Math.random() * 0.25
-            );
-
+        const randomRadius =
+            radius *
+            (0.75 + Math.random() * 0.25);
 
         const x =
             Math.cos(angle) *
-            radius;
+            randomRadius;
 
         const y =
             Math.sin(angle) *
-            radius;
-
+            randomRadius;
 
         if (i === 0) {
 
-            ctx.moveTo(
-                x,
-                y
-            );
+            ctx.moveTo(x, y);
 
         } else {
 
-            ctx.lineTo(
-                x,
-                y
-            );
+            ctx.lineTo(x, y);
         }
     }
 
-
     ctx.closePath();
-
-
-    ctx.fillStyle =
-        "#777";
-
-
-    ctx.strokeStyle =
-        "#aaa";
-
-
-    ctx.lineWidth = 2;
-
 
     ctx.fill();
 
-    ctx.stroke();
+    // Crater
 
+    ctx.fillStyle = "#444";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        -radius * 0.2,
+        -radius * 0.1,
+        radius * 0.2,
+        0,
+        Math.PI * 2
+    );
+
+    ctx.fill();
 
     ctx.restore();
 }
 
-
-// ============================================
-// DESENHAR TIRO
-// ============================================
+// ==========================
+// 🔥 DESENHAR TIROS
+// ==========================
 
 function drawBullet(bullet) {
 
     ctx.save();
 
+    ctx.fillStyle = "#00ffff";
 
-    // Brilho
+    ctx.shadowColor = "#00ffff";
 
-    ctx.shadowBlur = 20;
-
-    ctx.shadowColor =
-        "#00ffff";
-
-
-    // Núcleo
-
-    ctx.fillStyle =
-        "#ffffff";
-
+    ctx.shadowBlur = 15;
 
     ctx.fillRect(
-
         bullet.x,
-
         bullet.y,
-
         bullet.width,
-
         bullet.height
     );
-
-
-    // Aura
-
-    ctx.shadowBlur = 30;
-
-    ctx.fillStyle =
-        "#00ffff";
-
-
-    ctx.fillRect(
-
-        bullet.x - 2,
-
-        bullet.y,
-
-        bullet.width + 4,
-
-        bullet.height
-    );
-
 
     ctx.restore();
 }
 
-
-// ============================================
-// MOVER JOGADOR
-// ============================================
+// ==========================
+// 🚀 MOVIMENTO DO PLAYER
+// ==========================
 
 function movePlayer() {
 
@@ -666,10 +427,8 @@ function movePlayer() {
         keys["A"]
     ) {
 
-        player.x -=
-            player.speed;
+        player.x -= player.speed;
     }
-
 
     if (
         keys["ArrowRight"] ||
@@ -677,22 +436,18 @@ function movePlayer() {
         keys["D"]
     ) {
 
-        player.x +=
-            player.speed;
+        player.x += player.speed;
     }
 
+    // Limites
 
-    if (
-        player.x < 0
-    ) {
+    if (player.x < 0) {
 
         player.x = 0;
     }
 
-
     if (
-        player.x +
-        player.width >
+        player.x + player.width >
         canvas.width
     ) {
 
@@ -702,20 +457,109 @@ function movePlayer() {
     }
 }
 
+// ==========================
+// ☄️ ATUALIZAR METEOROS
+// ==========================
 
-// ============================================
-// ATUALIZAR TIROS
-// ============================================
+function updateMeteors() {
+
+    meteorTimer++;
+
+    // Quanto maior a dificuldade,
+    // mais rápido os meteoros aparecem.
+
+    const spawnRate =
+        Math.max(
+            5,
+            45 - difficulty * 4
+        );
+
+    if (meteorTimer >= spawnRate) {
+
+        meteorTimer = 0;
+
+        // Quantidade de meteoros por vez
+
+        const amount =
+            Math.min(
+                1 + Math.floor(difficulty / 3),
+                7
+            );
+
+        for (let i = 0; i < amount; i++) {
+
+            createMeteor();
+        }
+    }
+
+    for (let i = meteors.length - 1; i >= 0; i--) {
+
+        const meteor = meteors[i];
+
+        meteor.y += meteor.speed;
+
+        meteor.rotation +=
+            meteor.rotationSpeed;
+
+        // Saiu da tela
+
+        if (
+            meteor.y >
+            canvas.height + meteor.height
+        ) {
+
+            meteors.splice(i, 1);
+
+            continue;
+        }
+
+        // Colisão com a nave
+
+        if (
+            player.x <
+                meteor.x + meteor.width &&
+
+            player.x + player.width >
+                meteor.x &&
+
+            player.y <
+                meteor.y + meteor.height &&
+
+            player.y + player.height >
+                meteor.y
+        ) {
+
+            createExplosion(
+                meteor.x + meteor.width / 2,
+                meteor.y + meteor.height / 2
+            );
+
+            meteors.splice(i, 1);
+
+            lives--;
+
+            updateHUD();
+
+            if (lives <= 0) {
+
+                endGame();
+
+                return;
+            }
+        }
+    }
+}
+
+// ==========================
+// 🔫 ATUALIZAR TIROS
+// ==========================
 
 function updateBullets() {
 
-    if (
-        shootCooldown > 0
-    ) {
+    if (shootCooldown > 0) {
 
         shootCooldown--;
     }
-
 
     for (
         let i = bullets.length - 1;
@@ -723,33 +567,20 @@ function updateBullets() {
         i--
     ) {
 
-        const bullet =
-            bullets[i];
+        const bullet = bullets[i];
 
-
-        // Movimento
-
-        bullet.y -=
-            bullet.speed;
-
+        bullet.y -= bullet.speed;
 
         // Saiu da tela
 
-        if (
-            bullet.y <
-            -50
-        ) {
+        if (bullet.y < -30) {
 
-            bullets.splice(
-                i,
-                1
-            );
+            bullets.splice(i, 1);
 
             continue;
         }
 
-
-        // Verificar meteoros
+        // Colisão com meteoros
 
         for (
             let j = meteors.length - 1;
@@ -757,71 +588,43 @@ function updateBullets() {
             j--
         ) {
 
-            const meteor =
-                meteors[j];
+            const meteor = meteors[j];
 
-
-            const hit =
-
+            if (
                 bullet.x <
-                meteor.x +
-                meteor.size &&
+                    meteor.x + meteor.width &&
 
-                bullet.x +
-                bullet.width >
-                meteor.x &&
+                bullet.x + bullet.width >
+                    meteor.x &&
 
                 bullet.y <
-                meteor.y +
-                meteor.size &&
+                    meteor.y + meteor.height &&
 
-                bullet.y +
-                bullet.height >
-                meteor.y;
+                bullet.y + bullet.height >
+                    meteor.y
+            ) {
 
-
-            if (hit) {
-
-                // Dano
+                // Tiro acertou
 
                 meteor.health--;
 
+                bullets.splice(i, 1);
 
                 createExplosion(
-
-                    meteor.x +
-                    meteor.size / 2,
-
-                    meteor.y +
-                    meteor.size / 2
+                    bullet.x,
+                    bullet.y
                 );
 
+                // Meteoro destruído
 
-                bullets.splice(
-                    i,
-                    1
-                );
+                if (meteor.health <= 0) {
 
-
-                // Destruiu
-
-                if (
-                    meteor.health <= 0
-                ) {
-
-                    meteors.splice(
-                        j,
-                        1
-                    );
-
+                    meteors.splice(j, 1);
 
                     score += 3;
 
-
-                    scoreText.textContent =
-                        score;
+                    updateHUD();
                 }
-
 
                 break;
             }
@@ -829,194 +632,9 @@ function updateBullets() {
     }
 }
 
-
-// ============================================
-// COLISÃO NAVE / METEORO
-// ============================================
-
-function playerMeteorCollision(
-    meteor
-) {
-
-    const playerCenterX =
-        player.x +
-        player.width / 2;
-
-
-    const playerCenterY =
-        player.y +
-        player.height / 2;
-
-
-    const meteorCenterX =
-        meteor.x +
-        meteor.size / 2;
-
-
-    const meteorCenterY =
-        meteor.y +
-        meteor.size / 2;
-
-
-    const dx =
-        playerCenterX -
-        meteorCenterX;
-
-
-    const dy =
-        playerCenterY -
-        meteorCenterY;
-
-
-    const distance =
-        Math.sqrt(
-            dx * dx +
-            dy * dy
-        );
-
-
-    return (
-        distance <
-        meteor.size / 2 +
-        25
-    );
-}
-
-
-// ============================================
-// ATUALIZAR METEOROS
-// ============================================
-
-function updateMeteors() {
-
-    meteorTimer++;
-
-
-    // Quanto maior a dificuldade,
-    // menor o intervalo.
-
-    const spawnRate =
-        Math.max(
-            5,
-            45 -
-            difficulty * 4
-        );
-
-
-    if (
-        meteorTimer >=
-        spawnRate
-    ) {
-
-        // Mais meteoros com o tempo
-
-        const amount =
-            Math.min(
-                1 +
-                Math.floor(
-                    difficulty / 3
-                ),
-                7
-            );
-
-
-        for (
-            let i = 0;
-            i < amount;
-            i++
-        ) {
-
-            createMeteor();
-        }
-
-
-        meteorTimer = 0;
-    }
-
-
-    for (
-        let i = meteors.length - 1;
-        i >= 0;
-        i--
-    ) {
-
-        const meteor =
-            meteors[i];
-
-
-        meteor.y +=
-            meteor.speed;
-
-
-        meteor.rotation +=
-            meteor.rotationSpeed;
-
-
-        // Colisão
-
-        if (
-            playerMeteorCollision(
-                meteor
-            )
-        ) {
-
-            createExplosion(
-
-                meteor.x +
-                meteor.size / 2,
-
-                meteor.y +
-                meteor.size / 2
-            );
-
-
-            meteors.splice(
-                i,
-                1
-            );
-
-
-            lives--;
-
-
-            livesText.textContent =
-                lives;
-
-
-            if (
-                lives <= 0
-            ) {
-
-                endGame();
-
-                return;
-            }
-
-
-            continue;
-        }
-
-
-        // Saiu da tela
-
-        if (
-            meteor.y >
-            canvas.height +
-            meteor.size
-        ) {
-
-            meteors.splice(
-                i,
-                1
-            );
-        }
-    }
-}
-
-
-// ============================================
-// ATUALIZAR PARTÍCULAS
-// ============================================
+// ==========================
+// 💥 PARTÍCULAS
+// ==========================
 
 function updateParticles() {
 
@@ -1026,210 +644,185 @@ function updateParticles() {
         i--
     ) {
 
-        const particle =
-            particles[i];
+        const particle = particles[i];
 
+        particle.x += particle.speedX;
 
-        particle.x +=
-            particle.vx;
+        particle.y += particle.speedY;
 
+        particle.life--;
 
-        particle.y +=
-            particle.vy;
+        particle.size *= 0.95;
 
+        if (particle.life <= 0) {
 
-        particle.life -=
-            0.025;
-
-
-        particle.size *=
-            0.97;
-
-
-        if (
-            particle.life <= 0
-        ) {
-
-            particles.splice(
-                i,
-                1
-            );
+            particles.splice(i, 1);
         }
     }
 }
 
-
-// ============================================
+// ==========================
 // DESENHAR PARTÍCULAS
-// ============================================
+// ==========================
 
 function drawParticles() {
 
-    for (
-        const particle of particles
-    ) {
+    for (const particle of particles) {
+
+        ctx.fillStyle = "#ff9d00";
 
         ctx.globalAlpha =
-            particle.life;
-
-
-        ctx.fillStyle =
-            "#ff7b00";
-
+            particle.life / 30;
 
         ctx.beginPath();
 
-
         ctx.arc(
-
             particle.x,
-
             particle.y,
-
             particle.size,
-
             0,
-
             Math.PI * 2
         );
-
 
         ctx.fill();
     }
 
-
     ctx.globalAlpha = 1;
 }
 
-
-// ============================================
-// AUMENTAR DIFICULDADE
-// ============================================
+// ==========================
+// 📈 DIFICULDADE
+// ==========================
 
 function updateDifficulty() {
 
-    // A cada aproximadamente
-    // 10 segundos aumenta.
+    // A dificuldade aumenta
+    // aproximadamente a cada 10 segundos.
 
     difficulty =
-        1 +
-        Math.floor(
-            gameTime / 600
-        );
-
+        1 + Math.floor(gameTime / 600);
 
     // Nave fica mais rápida
 
-    player.speed =
-        Math.min(
-
-            7 +
-            difficulty * 0.8,
-
-            player.maxSpeed
-        );
+    player.speed = Math.min(
+        7 + difficulty * 0.8,
+        player.maxSpeed
+    );
 }
 
+// ==========================
+// HUD
+// ==========================
 
-// ============================================
-// LOOP DO JOGO
-// ============================================
+function updateHUD() {
+
+    scoreText.textContent = score;
+
+    livesText.textContent = lives;
+
+    highScoreText.textContent =
+        highScore;
+}
+
+// ==========================
+// 🎮 TECLAS
+// ==========================
+
+const keys = {};
+
+document.addEventListener(
+    "keydown",
+    (event) => {
+
+        keys[event.key] = true;
+
+        // SPACE = atirar
+
+        if (event.code === "Space") {
+
+            event.preventDefault();
+
+            shoot();
+        }
+
+        // Evita a página rolar
+        // usando as setas
+
+        if (
+            event.code === "ArrowLeft" ||
+            event.code === "ArrowRight"
+        ) {
+
+            event.preventDefault();
+        }
+    }
+);
+
+document.addEventListener(
+    "keyup",
+    (event) => {
+
+        keys[event.key] = false;
+    }
+);
+
+// ==========================
+// 🔄 LOOP DO JOGO
+// ==========================
 
 function gameLoop() {
 
-    if (!gameRunning)
-        return;
-
+    if (!gameRunning) return;
 
     gameTime++;
 
-
     drawBackground();
-
 
     movePlayer();
 
-
     updateMeteors();
-
 
     updateBullets();
 
-
     updateParticles();
-
 
     updateDifficulty();
 
-
     drawPlayer();
 
+    for (const meteor of meteors) {
 
-    // Meteoros
-
-    for (
-        const meteor of meteors
-    ) {
-
-        drawMeteor(
-            meteor
-        );
+        drawMeteor(meteor);
     }
 
+    for (const bullet of bullets) {
 
-    // TIROS
-
-    for (
-        const bullet of bullets
-    ) {
-
-        drawBullet(
-            bullet
-        );
+        drawBullet(bullet);
     }
-
 
     drawParticles();
 
+    // Pontuação automática
+    // pelo tempo sobrevivido
+
+    if (gameTime % 60 === 0) {
+
+        score++;
+
+        updateHUD();
+    }
 
     animationId =
-        requestAnimationFrame(
-            gameLoop
-        );
+        requestAnimationFrame(gameLoop);
 }
 
-
-// ============================================
-// COMEÇAR JOGO
-// ============================================
+// ==========================
+// ▶️ COMEÇAR JOGO
+// ==========================
 
 function startGame() {
 
-    menu.classList.add(
-        "hidden"
-    );
-
-
-    game.classList.remove(
-        "hidden"
-    );
-
-
-    gameOver.classList.add(
-        "hidden"
-    );
-
-
-    player =
-        createPlayer();
-
-
-    meteors = [];
-
-    bullets = [];
-
-    particles = [];
-
+    // Reset
 
     score = 0;
 
@@ -1243,169 +836,139 @@ function startGame() {
 
     shootCooldown = 0;
 
+    meteors = [];
 
-    scoreText.textContent =
-        "0";
+    bullets = [];
 
+    particles = [];
 
-    livesText.textContent =
-        "3";
-
-
-    gameRunning = true;
-
+    resetPlayer();
 
     createStars();
 
+    updateHUD();
 
-    cancelAnimationFrame(
-        animationId
-    );
+    // Tela
 
+    menu.classList.add("hidden");
+
+    gameOver.classList.add("hidden");
+
+    game.classList.remove("hidden");
+
+    gameRunning = true;
+
+    // 🎵 Começa a música
+
+    musica.currentTime = 0;
+
+    musica.play().catch((error) => {
+
+        console.log(
+            "Não foi possível iniciar a música:",
+            error
+        );
+    });
+
+    // Começa o loop
+
+    cancelAnimationFrame(animationId);
 
     gameLoop();
 }
 
-
-// ============================================
-// GAME OVER
-// ============================================
+// ==========================
+// 💀 GAME OVER
+// ==========================
 
 function endGame() {
 
     gameRunning = false;
 
+    cancelAnimationFrame(animationId);
 
-    cancelAnimationFrame(
-        animationId
-    );
+    // Para música
 
+    musica.pause();
+
+    musica.currentTime = 0;
+
+    // Recorde
+
+    if (score > highScore) {
+
+        highScore = score;
+
+        localStorage.setItem(
+            "naveEscapeHighScore",
+            highScore
+        );
+    }
+
+    // Atualiza tela
 
     finalScoreText.textContent =
         score;
 
+    highScoreText.textContent =
+        highScore;
 
-    // Novo recorde
+    game.classList.add("hidden");
 
-    if (
-        score > highScore
-    ) {
-
-        highScore =
-            score;
-
-
-        localStorage.setItem(
-
-            "naveEscapeHighScore",
-
-            highScore
-        );
-
-
-        highScoreText.textContent =
-            highScore;
-    }
-
-
-    gameOver.classList.remove(
-        "hidden"
-    );
-    musica.pause();
-musica.currentTime = 0;
+    gameOver.classList.remove("hidden");
 }
 
+// ==========================
+// 🔄 REINICIAR
+// ==========================
 
-// ============================================
-// BOTÃO JOGAR
-// ============================================
-
-startButton.addEventListener(
+restartBtn.addEventListener(
     "click",
-    startGame
-    musica.currentTime = 0;
-    musica.play();
-);
+    () => {
 
-
-// ============================================
-// RECOMEÇAR
-// ============================================
-
-restartButton.addEventListener(
-    "click",
-    startGame
-);
-
-
-// ============================================
-// VOLTAR AO MENU
-// ============================================
-
-menuButton.addEventListener(
-    "click",
-    function() {
-
-        gameOver.classList.add(
-            "hidden"
-        );
-
-        game.classList.add(
-            "hidden"
-        );
-
-        menu.classList.remove(
-            "hidden"
-        );
+        startGame();
     }
 );
 
+// ==========================
+// 🏠 VOLTAR AO MENU
+// ==========================
 
-// ============================================
-// TECLADO
-// ============================================
+menuBtn.addEventListener(
+    "click",
+    () => {
 
-window.addEventListener(
-    "keydown",
-    function(event) {
+        gameOver.classList.add("hidden");
 
-        keys[event.key] = true;
+        game.classList.add("hidden");
 
+        menu.classList.remove("hidden");
 
-        // =================================
-        // ESPAÇO = TIRO
-        // =================================
+        musica.pause();
 
-        if (
-            event.code === "Space"
-        ) {
-
-            event.preventDefault();
-
-            shoot();
-        }
-
-
-        // Evita a página
-        // de rolar
-
-        if (
-            event.code === "ArrowLeft" ||
-            event.code === "ArrowRight" ||
-            event.code === "Space"
-        ) {
-
-            event.preventDefault();
-        }
+        musica.currentTime = 0;
     }
 );
 
+// ==========================
+// ▶️ BOTÃO JOGAR
+// ==========================
 
-window.addEventListener(
-    "keyup",
-    function(event) {
+playBtn.addEventListener(
+    "click",
+    () => {
 
-        keys[event.key] = false;
+        startGame();
     }
 );
 
+// ==========================
+// INICIALIZAÇÃO
+// ==========================
+
+highScoreText.textContent =
+    highScore;
+
+createStars();
+
+resetPlayer();
