@@ -1,24 +1,36 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Nave Escape</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <!-- MENU -->
+    <!-- =========================
+         MENU PRINCIPAL
+    ========================== -->
+
     <div id="menu">
 
         <div class="title">
+
             <h1>🚀 NAVE ESCAPE</h1>
-            <div class="version">v1.0.0.5</div>
+
+            <div class="version">
+                v1.0.0.6
+            </div>
+
         </div>
 
         <p class="description">
-            Sobreviva aos meteoros, destrua tudo e faça a maior pontuação!
+            Sobreviva aos meteoros, destrua tudo
+            e faça a maior pontuação!
         </p>
 
         <button id="startButton">
@@ -26,6 +38,7 @@
         </button>
 
         <div class="controls">
+
             <p>🎮 CONTROLES</p>
 
             <span>
@@ -35,13 +48,19 @@
             <span>
                 SPACE — Atirar 🔫
             </span>
+
         </div>
 
     </div>
 
 
-    <!-- JOGO -->
+    <!-- =========================
+         ÁREA DO JOGO
+    ========================== -->
+
     <div id="game" class="hidden">
+
+        <!-- HUD -->
 
         <div id="hud">
 
@@ -61,9 +80,16 @@
 
         <canvas id="gameCanvas"></canvas>
 
+    </div>
 
-        <!-- GAME OVER -->
-        <div id="gameOver" class="hidden">
+
+    <!-- =========================
+         GAME OVER
+    ========================== -->
+
+    <div id="gameOver" class="hidden">
+
+        <div class="gameOverBox">
 
             <h1>💥 GAME OVER</h1>
 
@@ -89,4 +115,5 @@
     <script src="script.js"></script>
 
 </body>
+
 </html>
