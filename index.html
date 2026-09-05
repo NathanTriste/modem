@@ -3,44 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nave Escape 🚀</title>
+    <title>Nave Escape</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
+    <!-- MENU -->
     <div id="menu">
-        <h1>🚀 NAVE ESCAPE</h1>
-        <p>Desvie dos meteoros e sobreviva o máximo possível!</p>
 
-        <button id="startButton">JOGAR</button>
+        <div class="title">
+            <h1>🚀 NAVE ESCAPE</h1>
+            <div class="version">v1.0.0.1</div>
+        </div>
+
+        <p class="description">
+            Sobreviva aos meteoros, destrua tudo e faça a maior pontuação!
+        </p>
+
+        <button id="startButton">
+            JOGAR
+        </button>
 
         <div class="controls">
-            <p>🎮 Controles</p>
-            <span>← → ou A/D para mover</span>
+            <p>🎮 CONTROLES</p>
+
+            <span>
+                ← → ou A / D — Mover
+            </span>
+
+            <span>
+                SPACE — Atirar 🔫
+            </span>
         </div>
+
     </div>
 
+
+    <!-- JOGO -->
     <div id="game" class="hidden">
 
         <div id="hud">
-            <div>⭐ Pontos: <span id="score">0</span></div>
-            <div>❤️ Vidas: <span id="lives">3</span></div>
-            <div>🔥 Recorde: <span id="highScore">0</span></div>
+
+            <div class="hudBox">
+                ⭐ <span id="score">0</span>
+            </div>
+
+            <div class="hudBox">
+                ❤️ <span id="lives">3</span>
+            </div>
+
+            <div class="hudBox">
+                🔥 <span id="highScore">0</span>
+            </div>
+
         </div>
 
         <canvas id="gameCanvas"></canvas>
 
-        <div id="gameOver" class="hidden">
-            <h1>💥 GAME OVER</h1>
-            <p>Sua pontuação:</p>
-            <h2 id="finalScore">0</h2>
 
-            <button id="restartButton">JOGAR NOVAMENTE</button>
-            <button id="menuButton">MENU</button>
+        <!-- GAME OVER -->
+        <div id="gameOver" class="hidden">
+
+            <h1>💥 GAME OVER</h1>
+
+            <p>Pontuação</p>
+
+            <h2 id="finalScore">
+                0
+            </h2>
+
+            <button id="restartButton">
+                JOGAR NOVAMENTE
+            </button>
+
+            <button id="menuButton">
+                MENU
+            </button>
+
         </div>
 
     </div>
 
+
     <script src="script.js"></script>
+
 </body>
 </html>
