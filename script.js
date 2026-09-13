@@ -66,14 +66,6 @@ musica.volume = 0.2;
 const somTiro = new Audio("laser.mp3");
 somTiro.volume = 0.9;
 
-// Quando apertar ESPAÇO
-document.addEventListener("keydown", (event) => {
-    if (event.code === "Space") {
-        somTiro.currentTime = 0;
-        somTiro.play();
-    }
-});
-
 // ==========================================
 // TAMANHO DO CANVAS
 // ==========================================
@@ -1082,6 +1074,9 @@ document.addEventListener(
             event.preventDefault();
 
             shoot();
+
+            somTiro.currentTime = 0;
+            somTiro.play();
         }
 
 
