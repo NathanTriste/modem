@@ -396,4 +396,62 @@ button:active {
         font-size: 50px;
     }
 
+    /* =========================
+   RODAPÉ / INFORMAÇÕES
+========================= */
+
+#credit {
+    position: fixed;
+    right: 12px;
+    bottom: 8px;
+
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.45);
+
+    z-index: 9999;
+
+    pointer-events: none;
+}
+
+
+#updates {
+    position: fixed;
+    left: 12px;
+    bottom: 8px;
+
+    width: 220px;
+
+    padding: 7px 10px;
+
+    background: rgba(0, 0, 0, 0.45);
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 6px;
+
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.55);
+
+    z-index: 9999;
+
+    pointer-events: none;
+}
+
+
+#updates strong {
+    display: block;
+
+    font-size: 11px;
+
+    color: rgba(0, 234, 255, 0.75);
+
+    margin-bottom: 3px;
+}
+
+
+#updates span {
+    display: block;
+
+    line-height: 1.4;
+}
+
 }
