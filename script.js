@@ -63,7 +63,7 @@ musica.volume = 0.2;
 
 
 // Som do tiro
-const somTiro = new Audio("laser.mp3");
+const somTiro = new Audio("music/laser.mp3");
 somTiro.volume = 0.9;
 
 // ==========================================
