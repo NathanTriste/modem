@@ -59,12 +59,12 @@ const musica =
     new Audio("music/NoSurprises.mp3");
 
 musica.loop = true;
-musica.volume = 0.4;
+musica.volume = 0.2;
 
 
 // Som do tiro
 const somTiro = new Audio("laser.mp3");
-somTiro.volume = 0.6;
+somTiro.volume = 0.9;
 
 // Quando apertar ESPAÇO
 document.addEventListener("keydown", (event) => {
