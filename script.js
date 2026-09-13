@@ -64,7 +64,7 @@ musica.volume = 0.2;
 
 // Som do tiro
 const somTiro = new Audio("music/laser.mp3");
-somTiro.volume = 0.9;
+somTiro.volume = 0.4;
 
 // ==========================================
 // TAMANHO DO CANVAS
