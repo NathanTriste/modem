@@ -2447,10 +2447,10 @@ function drawBullets() {
         ctx.save();
 
         ctx.fillStyle =
-            "#00eaff";
+            "#fc0404";
 
         ctx.shadowColor =
-            "#00eaff";
+            "#e100ff";
 
         ctx.shadowBlur = 12;
 
