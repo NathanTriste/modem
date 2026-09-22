@@ -1,122 +1,152 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Nave Escape</title>
-
     <link rel="stylesheet" href="style.css">
 </head>
-
-<!-- =========================
-     RODAPÉ / INFORMAÇÕES
-========================== -->
-
-<div id="credit">
-    Criado e desenvolvido com total auxílio do ChatGPT
-</div>
-
-<div id="updates">
-    <strong>Proxima atualização:</strong>
-    <span>A v1.0.2.0 — Virá com um novo menu, musicas, jogabilidade e introdução de Boss.</span>
-</div>
-
 <body>
 
-    <!-- =========================
-         MENU PRINCIPAL
-    ========================== -->
+    <!-- BOTÃO DE SOM -->
+    <button id="soundBtn" class="sound-btn">🔊</button>
 
-    <div id="menu">
+    <!-- POPUP DE BOAS-VINDAS -->
+    <div id="welcomeOverlay" class="welcome-overlay">
+        <div class="welcome-box">
 
-        <div class="title">
+            <button id="closeWelcome" class="welcome-close">✕</button>
+
+            <div class="welcome-icon">🚀</div>
+
+            <h2>BEM-VINDO</h2>
+
+            <p>
+                Prepare-se para sobreviver aos meteoros,
+                enfrentar bosses e tentar chegar aos
+                <strong>2000 pontos...</strong>
+            </p>
+
+            <p class="welcome-warning">
+                ⚠️ O jogo não vai pegar leve.
+            </p>
+
+            <button id="enterGame" class="welcome-btn">
+                ENTRAR NO JOGO
+            </button>
+
+        </div>
+    </div>
+
+
+    <!-- MENU -->
+    <div id="menu" class="screen">
+
+        <div class="menu-content">
 
             <h1>🚀 System of Burla</h1>
 
-            <div class="version">
-                v1.0.1.9
+            <p class="subtitle">
+                Sobreviva aos meteoros, destrua tudo e faça a maior pontuação!
+            </p>
+
+            <button id="startBtn" class="main-btn">
+                JOGAY
+            </button>
+
+            <div class="controls">
+
+                <h3>CONTROLES</h3>
+
+                <p>⬅️ ➡️ ou A / D — Mover</p>
+                <p>SPACE — Atirar</p>
+
             </div>
-
-        </div>
-
-        <p class="description">
-            NOVA VERSÃO EM DESENVOLVIMENTO -
-                  Lançamento: 21/09/2026 as 18:00
-        </p>
-
-        <button id="startButton">
-            JOGAY
-        </button>
-
-        <div class="controls">
-
-            <p>🎮 CONTROLES</p>
-
-            <span>
-                ← → ou A / D — Mover
-            </span>
-
-            <span>
-                Spaço — Atirar 🔫
-            </span>
 
         </div>
 
     </div>
 
 
-    <!-- =========================
-         ÁREA DO JOGO
-    ========================== -->
-
-    <div id="game" class="hidden">
-
-        <!-- HUD -->
-
-        <div id="hud">
-
-            <div class="hudBox">
-                ⭐ <span id="score">0</span>
-            </div>
-
-            <div class="hudBox">
-                ❤️ <span id="lives">3</span>
-            </div>
-
-            <div class="hudBox">
-                🔥 <span id="highScore">0</span>
-            </div>
-
-        </div>
+    <!-- JOGO -->
+    <div id="game" class="screen hidden">
 
         <canvas id="gameCanvas"></canvas>
 
+        <div id="hud">
+
+            <div class="hud-item">
+                PONTOS:
+                <span id="score">0</span>
+            </div>
+
+            <div class="hud-item">
+                VIDAS:
+                <span id="lives">3</span>
+            </div>
+
+            <div class="hud-item">
+                RECORDE:
+                <span id="highScore">0</span>
+            </div>
+
+            <div class="hud-item power">
+                POWER:
+                <span id="powerLevel">1</span>
+            </div>
+
+        </div>
+
+
+        <!-- HUD DO BOSS -->
+        <div id="bossHud" class="boss-hud hidden">
+
+            <div class="boss-name" id="bossName">
+                BOSS
+            </div>
+
+            <div class="boss-bar-container">
+                <div id="bossBar" class="boss-bar"></div>
+            </div>
+
+            <div class="boss-hp-text">
+                HP:
+                <span id="bossHpText">0</span>
+            </div>
+
+        </div>
+
+
+        <!-- AVISO DE BOSS -->
+        <div id="bossWarning" class="boss-warning hidden">
+            ⚠️ BOSS INCOMING ⚠️
+        </div>
+
     </div>
 
 
-    <!-- =========================
-         GAME OVER
-    ========================== -->
+    <!-- GAME OVER -->
+    <div id="gameOver" class="screen hidden">
 
-    <div id="gameOver" class="hidden">
+        <div class="gameover-content">
 
-        <div class="gameOverBox">
+            <h1>💥 PERDEU FI</h1>
 
-            <h1>💥 Perdeu fi</h1>
+            <p>
+                Pontuação:
+                <strong id="finalScore">0</strong>
+            </p>
 
-            <p>Pontuação</p>
+            <p>
+                Recorde:
+                <strong id="finalHighScore">0</strong>
+            </p>
 
-            <h2 id="finalScore">
-                0
-            </h2>
-
-            <button id="restartButton">
+            <button id="restartBtn" class="main-btn">
                 JOGAR NOVAMENTE
             </button>
 
-            <button id="menuButton">
+            <button id="menuBtn" class="secondary-btn">
                 MENU
             </button>
 
@@ -124,6 +154,37 @@
 
     </div>
 
+
+    <!-- RODAPÉ -->
+    <div class="footer-left">
+        <strong>Nova Atualização:</strong>
+        <br>
+        V1.0.2.0
+        <br>
+        • Sistema de bosses
+        <br>
+        • Power coins
+        <br>
+        • Musica opcional
+    </div>
+
+    <div class="footer-right">
+        Criado e desenvolvido com total auxílio do ChatGPT
+    </div>
+
+
+ <!-- ÁUDIOS -->
+<audio id="menuMusic" loop preload="auto">
+    <source src="music/MS1stM.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="gameMusic" loop preload="auto">
+    <source src="music/NoSurprises.mp3" type="audio/mpeg">
+</audio>
+
+<audio id="laserSound" preload="auto">
+    <source src="music/laser.mp3" type="audio/mpeg">
+</audio>
 
     <script src="script.js"></script>
 
