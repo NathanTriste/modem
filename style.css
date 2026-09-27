@@ -544,6 +544,14 @@ body {
    RODAPÉ
 ========================= */
 
+.update-notice {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-size: 12px;
+    opacity: 0.8;
+}
+
 .footer-left,
 .footer-right {
     position: fixed;
